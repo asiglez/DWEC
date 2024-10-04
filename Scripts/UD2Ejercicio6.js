@@ -32,34 +32,50 @@ function pintarTriangulo(n){
     }
     return resultado;
 }
-function pintarRombo(n){
-    let resultado=[];
-    let t=parseInt(n)+parseInt(n) - 1;
-    for(let f=(n*2-1);f>0;f--){
-        let fila=[];
-        resultado[f]=fila;
-        for(let c=0;c<t;c++){
-            fila[c]=' ';
+function pintarRombo(n) { 
+    let resultado = [];
+    let t = n; // Altura del rombo
+
+    // Llenar la matriz
+    for (let f = 0; f < t; f++) {
+        let fila = [];
+        resultado[f] = fila;
+
+        // Inicializar la fila con espacios
+        for (let c = 0; c < t * 2 - 1; c++) {
+            fila[c] = ' ';
+        }
+
+        // Calcular la posición del primer y último asterisco
+        const inicio = t - 1 - f; // Primera posición del asterisco
+        const fin = t - 1 + f; // Última posición del asterisco
+
+        // Rellenar la fila con asteriscos
+        for (let c = inicio; c <= fin; c++) {
+            fila[c] = '*'; // Asigna un asterisco
         }
     }
-    for(let f=0;f<n;f++){
-        let fila=[];
-        resultado[f]=fila;
-        for(let c=0;c<t;c++){
-            if(f===n-1 || c===t-n-f || c===t-(n-f)){
-            fila[c]='*';
-            }
+
+    // Construir la parte inferior del rombo
+    for (let f = t - 2; f >= 0; f--) {
+        let fila = [];
+        resultado.push(fila);
+
+        // Inicializar la fila con espacios
+        for (let c = 0; c < t * 2 - 1; c++) {
+            fila[c] = ' ';
+        }
+
+        // Calcular la posición del primer y último asterisco
+        const inicio = t - 1 - f; // Primera posición del asterisco
+        const fin = t - 1 + f; // Última posición del asterisco
+
+        // Rellenar la fila con asteriscos
+        for (let c = inicio; c <= fin; c++) {
+            fila[c] = '*'; // Asigna un asterisco
         }
     }
-    for(let f=(n*2-1);f>0;f--){
-        let fila=[];
-        resultado[f]=fila;
-        for(let c=0;c<t;c++){
-            if(c===t-n*2-f || c===t-(n*2-f)){
-            fila[c]='*';
-            }
-        }
-    }
+
     return resultado;
 }
 switch (poligono){
