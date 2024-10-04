@@ -1,6 +1,6 @@
+'use strict';
 (function() {
     let trabajadores = [];
-
     function crearTrabajador(nombre, categoria, contratacion) {
         let codigo = `E${String(trabajadores.length + 1).padStart(2, '0')}`; // Generar código único
         let trabajador = {
@@ -16,18 +16,15 @@
         };
         trabajadores.push(trabajador);
     }
-
     function listarTrabajadores() {
         console.log("Lista de trabajadores:");
         trabajadores.forEach(trabajador => {
             console.log(`${trabajador.codigo} - ${trabajador.nombre} - Categoría: ${trabajador.categoria} - Contratación: ${trabajador.contratacion}`);
         });
     }
-
     function calcularNominas() {
         let resumen = {};
         let totalNominas = 0;
-
         trabajadores.forEach(trabajador => {
             let nomina = trabajador.calcularNomina();
             totalNominas += nomina;
@@ -37,15 +34,12 @@
             resumen[trabajador.categoria].total += nomina;
             resumen[trabajador.categoria].cantidad++;
         });
-
         console.log("Resumen de nóminas por categoría:");
         for (let categoria in resumen) {
             console.log(`Categoría ${categoria}: Total = ${resumen[categoria].total.toFixed(2)}€, Cantidad = ${resumen[categoria].cantidad}`);
         }
         console.log(`Total de nóminas de la empresa: ${totalNominas.toFixed(2)}€`);
     }
-
-    // Código auxiliar para probar la aplicación
     crearTrabajador("Juan Pérez", 1, 2020);
     crearTrabajador("Ana García", 2, 2019);
     crearTrabajador("Luis Fernández", 3, 2018);

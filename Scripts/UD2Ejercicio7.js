@@ -1,3 +1,4 @@
+'use strict';
 function tablaMultiplicar(){
 let numero=prompt('Introduce un numero');
 let salida='';
@@ -7,7 +8,6 @@ for(let j=1;j<=10;j++){
 }
 }
 tablasMultiplicar();
-
 function tablasMultiplicar(){
     let numero1=prompt('Introduce un numero');
     let numero2=prompt('Introduce otro numero');

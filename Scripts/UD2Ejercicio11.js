@@ -1,3 +1,4 @@
+'use strict';
 function verificarNumeros(rangoInicio, rangoFin) {
     if(rangoInicio<=rangoFin){
     for (let i = rangoInicio; i <= rangoFin; i++) {
@@ -19,8 +20,6 @@ function verificarNumeros(rangoInicio, rangoFin) {
     console.log('El numero de inicio es mayor que el numero final');
 }
 }
-
-// Código auxiliar para probar la aplicación
 let inicio = parseInt(prompt("Introduce el inicio del rango:"));
 let fin = parseInt(prompt("Introduce el fin del rango:"));
 verificarNumeros(inicio, fin);

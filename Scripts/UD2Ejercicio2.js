@@ -1,14 +1,12 @@
+'use strict';
 let numeros = [];
 let input;
-// Solicitar números al usuario hasta que introduzca 0
 do {
   input = parseFloat(prompt("Introduce un número:"));
   if (input !== 0) {
     numeros.push(input);
   }
 } while (input !== 0);
-
-// Si no se introdujeron números, mostrar un mensaje
 if (numeros.length === 0) {
   console.log("No has introducido ningún número.");
 } else {

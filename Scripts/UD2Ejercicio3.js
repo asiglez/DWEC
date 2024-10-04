@@ -1,3 +1,4 @@
+'use strict';
 function pintarCuadrado(n){
     let resultado=[];
     for(let f=0;f<n;f++){

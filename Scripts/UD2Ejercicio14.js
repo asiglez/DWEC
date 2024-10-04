@@ -1,3 +1,4 @@
+'use strict';
 let alumnos = [
     {
         nombre: "Juan",
@@ -24,7 +25,6 @@ let alumnos = [
         ],
     },
 ];
-
 function procesarAlumnos(alumnos) {
     alumnos.forEach(alumno => {
         let notas = alumno.asignaturas.map(asig => asig.nota);
@@ -35,7 +35,6 @@ function procesarAlumnos(alumnos) {
         alumno.media = media;
     });
 }
-
 function imprimirAlumnosPromocionan(alumnos) {
     console.log("Alumnos que promocionan:");
     alumnos.forEach((alumno, index) => {
@@ -44,7 +43,6 @@ function imprimirAlumnosPromocionan(alumnos) {
         }
     });
 }
-
 function imprimirAlumnosNoPromocionan(alumnos) {
     console.log("Alumnos que no promocionan:");
     alumnos.forEach((alumno, index) => {
@@ -54,8 +52,6 @@ function imprimirAlumnosNoPromocionan(alumnos) {
         }
     });
 }
-
-// Código auxiliar para probar la aplicación
 procesarAlumnos(alumnos);
 imprimirAlumnosPromocionan(alumnos);
 imprimirAlumnosNoPromocionan(alumnos);

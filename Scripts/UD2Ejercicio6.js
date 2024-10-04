@@ -1,3 +1,4 @@
+'use strict';
 let poligono=parseInt(prompt('Que poligono quieres dibujar:\n'+'1- Cuadrado\n'+'2- Triangulo\n'+'3- Rombo'));
 let n;
 function pintarCuadrado(n){
@@ -34,48 +35,31 @@ function pintarTriangulo(n){
 }
 function pintarRombo(n) { 
     let resultado = [];
-    let t = n; // Altura del rombo
-
-    // Llenar la matriz
+    let t = n;
     for (let f = 0; f < t; f++) {
         let fila = [];
         resultado[f] = fila;
-
-        // Inicializar la fila con espacios
         for (let c = 0; c < t * 2 - 1; c++) {
             fila[c] = ' ';
         }
-
-        // Calcular la posición del primer y último asterisco
-        const inicio = t - 1 - f; // Primera posición del asterisco
-        const fin = t - 1 + f; // Última posición del asterisco
-
-        // Rellenar la fila con asteriscos
+        let inicio = t - 1 - f;
+        let fin = t - 1 + f;
         for (let c = inicio; c <= fin; c++) {
-            fila[c] = '*'; // Asigna un asterisco
+            fila[c] = '*';
         }
     }
-
-    // Construir la parte inferior del rombo
     for (let f = t - 2; f >= 0; f--) {
         let fila = [];
         resultado.push(fila);
-
-        // Inicializar la fila con espacios
         for (let c = 0; c < t * 2 - 1; c++) {
             fila[c] = ' ';
         }
-
-        // Calcular la posición del primer y último asterisco
-        const inicio = t - 1 - f; // Primera posición del asterisco
-        const fin = t - 1 + f; // Última posición del asterisco
-
-        // Rellenar la fila con asteriscos
+        let inicio = t - 1 - f;
+        let fin = t - 1 + f;
         for (let c = inicio; c <= fin; c++) {
-            fila[c] = '*'; // Asigna un asterisco
+            fila[c] = '*';
         }
     }
-
     return resultado;
 }
 switch (poligono){
