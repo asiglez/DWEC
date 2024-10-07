@@ -1,19 +1,19 @@
 'use strict';
 let trabajadores = [];
 function generarCodigo() {
-    const codigo = `E${String(trabajadores.length + 1).padStart(2, '0')}`;
+    let codigo = `E${String(trabajadores.length + 1).padStart(2, '0')}`;
     return codigo;
 }
 function crearTrabajador(nombre, categoria, contratacion) {
-    const codigo = generarCodigo();
-    const trabajador = {
+    let codigo = generarCodigo();
+    let trabajador = {
         codigo: codigo,
         nombre: nombre,
         categoria: categoria,
         contratacion: contratacion,
         calcularNomina: function () {
-            const salariosBase = { 1: 1100, 2: 1400, 3: 1900 };
-            const antiguedad = new Date().getFullYear() - this.contratacion;
+            let salariosBase = { 1: 1100, 2: 1400, 3: 1900 };
+            let antiguedad = new Date().getFullYear() - this.contratacion;
             return salariosBase[this.categoria] * (1 + 0.04 * antiguedad);
         }
     };
@@ -31,9 +31,9 @@ function listarTrabajadores() {
     }
 }
 function borrarTrabajador(codigo) {
-    const index = trabajadores.findIndex(trabajador => trabajador.codigo === codigo);
+    let index = trabajadores.findIndex(trabajador => trabajador.codigo === codigo);
     if (index !== -1) {
-        const confirmacion = confirm(`¿Seguro que deseas eliminar al trabajador con código ${codigo}?`);
+        let confirmacion = confirm(`¿Seguro que deseas eliminar al trabajador con código ${codigo}?`);
         if (confirmacion) {
             trabajadores.splice(index, 1);
             console.log(`Trabajador con código ${codigo} eliminado.`);
@@ -43,11 +43,11 @@ function borrarTrabajador(codigo) {
     }
 }
 function modificarTrabajador(codigo) {
-    const trabajador = trabajadores.find(t => t.codigo === codigo);
+    let trabajador = trabajadores.find(t => t.codigo === codigo);
     if (trabajador) {
-        const nuevoNombre = prompt(`Introduce el nuevo nombre (actual: ${trabajador.nombre})`) || trabajador.nombre;
-        const nuevaCategoria = prompt(`Introduce la nueva categoría (1, 2, 3) (actual: ${trabajador.categoria})`) || trabajador.categoria;
-        const nuevaContratacion = prompt(`Introduce el nuevo año de contratación (actual: ${trabajador.contratacion})`) || trabajador.contratacion;
+        let nuevoNombre = prompt(`Introduce el nuevo nombre (actual: ${trabajador.nombre})`) || trabajador.nombre;
+        let nuevaCategoria = prompt(`Introduce la nueva categoría (1, 2, 3) (actual: ${trabajador.categoria})`) || trabajador.categoria;
+        let nuevaContratacion = prompt(`Introduce el nuevo año de contratación (actual: ${trabajador.contratacion})`) || trabajador.contratacion;
 
         trabajador.nombre = nuevoNombre;
         trabajador.categoria = parseInt(nuevaCategoria);
@@ -59,18 +59,18 @@ function modificarTrabajador(codigo) {
     }
 }
 function calcularNominas() {
-    const resumenCategorias = { 1: 0, 2: 0, 3: 0 };
+    let resumenCategorias = { 1: 0, 2: 0, 3: 0 };
     let totalNominas = 0;
 
     trabajadores.forEach(trabajador => {
-        const nomina = trabajador.calcularNomina();
+        let nomina = trabajador.calcularNomina();
         totalNominas += nomina;
         resumenCategorias[trabajador.categoria] += nomina;
         console.log(`Trabajador: ${trabajador.nombre} - Categoría: ${trabajador.categoria} - Nómina: ${nomina.toFixed(2)}€`);
     });
 
     console.log("\nResumen por categorías:");
-    for (const [categoria, total] of Object.entries(resumenCategorias)) {
+    for (let [categoria, total] of Object.entries(resumenCategorias)) {
         console.log(`Categoría ${categoria}: Total = ${total.toFixed(2)}€`);
     }
     console.log(`Total de nóminas de la empresa: ${totalNominas.toFixed(2)}€`);
@@ -79,7 +79,7 @@ function mostrarMenu() {
     let salir = false;
 
     while (!salir) {
-        const opcion = prompt(
+        let opcion = prompt(
             `Menú:
 1. Crear trabajador
 2. Listar trabajadores
@@ -92,20 +92,20 @@ Elige una opción:`
 
         switch (opcion) {
             case '1':
-                const nombre = prompt("Introduce el nombre del trabajador:");
-                const categoria = prompt("Introduce la categoría (1, 2 o 3):");
-                const contratacion = prompt("Introduce el año de contratación:");
+                let nombre = prompt("Introduce el nombre del trabajador:");
+                let categoria = prompt("Introduce la categoría (1, 2 o 3):");
+                let contratacion = prompt("Introduce el año de contratación:");
                 crearTrabajador(nombre, parseInt(categoria), parseInt(contratacion));
                 break;
             case '2':
                 listarTrabajadores();
                 break;
             case '3':
-                const codigoMod = prompt("Introduce el código del trabajador a modificar:");
+                let codigoMod = prompt("Introduce el código del trabajador a modificar:");
                 modificarTrabajador(codigoMod);
                 break;
             case '4':
-                const codigoBor = prompt("Introduce el código del trabajador a borrar:");
+                let codigoBor = prompt("Introduce el código del trabajador a borrar:");
                 borrarTrabajador(codigoBor);
                 break;
             case '5':
