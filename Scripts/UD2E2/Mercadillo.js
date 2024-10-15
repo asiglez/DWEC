@@ -1,5 +1,5 @@
 'use strict';
-let mercadillo=[];
+let mercadillo=(function(){
 function comprobarProducto(array,nombre){
     let comprobacion=false;
 for(let valor in array){
@@ -49,12 +49,33 @@ function actualizarInventario(nombre,cantidad){
         alert("El producto no existe");
     }
 }
+function ordenarProductosPorPrecio(){
+    let ordenado= new Array();
+    ordenado=mercadillo.sort((a,b)=> a.precio - b.precio);
+    return ordenado;
+}
+function imprimirInventario(){
+    let inventario=[];
+    for(let nombre in mercadillo){
+        let producto = mercadillo[nombre];
+        let total = producto.Cantidad * producto.Precio;
+        inventario.push({ nombre, ...producto, Total: total });
+    }
+    return inventario;
+}
+function filtrarProductosPorCategoria(categoria){
+    let productosFiltrados = [];
+    for (let nombre in mercadillo) {
+        let producto = mercadillo[nombre];
+        if (producto.Categoria === categoria) {
+            productosFiltrados.push({
+                nombre: nombre,
+                cantidad: producto.Cantidad,
+                precio: producto.Precio
+            });
+        }
+    }
 
-agregarProducto("Platano",10,1.50,1);
-agregarProducto("Manzana",5,1.50,1);
-console.log(mercadillo);
-eliminarProducto("Platano");
-console.log(mercadillo);
-console.log(buscarProducto("Manzana"));
-actualizarInventario("Manzana",-6);
-console.log(mercadillo);
+    return productosFiltrados;
+}
+})();
