@@ -1,12 +1,11 @@
-'use strict';
-import { Linea } from 'Linea.js';
+import { Linea } from './Linea.js';
+import { Utilidades } from './Utilidades.js';
 class Factura {
     constructor(clienteNIF, fecha, hora, pagada) {
         this.clienteNIF = clienteNIF;
-        this.fecha = new Date(fecha);
-        this.hora = new Date(hora);
-        this.pagada = pagada;
-        this.lineas = new Array();
+        this.fecha = new Date(fecha + " " + hora);
+        this.pagada = pagada = 'on' ? 'Pagada' : 'Sin Pagar';
+        this.lineas = [];
     }
     get importeTotal() {
         if (this.lineas.length === 0) {
@@ -22,11 +21,36 @@ class Factura {
         return this.lineas.length;
     }
     agregarLinea(concepto, cantidad, precio) {
-        let linea = new Linea(concepto, cantidad, precio);
-        this.lineas.push(linea);
+        this.lineas.push(new Linea(concepto, cantidad, precio));
+    }
+    eliminarLinea() {
+        this.lineas.pop();
     }
     imprimirFactura() {
-        return ``;
+        let impreso = `ClienteNIF: ${this.clienteNIF} <br>
+    Fecha: ${this.fecha.getDate()}-${this.fecha.getMonth() + 1}-${this.fecha.getFullYear()}<br>
+    Hora: ${this.fecha.getHours()}:${this.fecha.getMinutes()}<br>
+    Pagada: ${this.pagada}<br>
+    Lineas:<br>`;
+        for (let linea of this.lineas) {
+            impreso += (`Concepto: ${linea.getConcepto}<br>
+            Cantidad: ${linea.getCantidad}<br>
+            Precio: ${linea.getPrecio}<br>`);
+        }
+        return impreso;
     }
 }
-let Factura= new Factura('72156747C','');
+window.addEventListener("load", function () {
+    let clienteNIF = document.getElementById('clienteNIF');
+    let fecha = document.getElementById('fecha');
+    let hora = document.getElementById('hora');
+    let pagada = document.getElementById('pagada');
+    let boton = document.getElementById('agregar');
+    let mostrar = document.getElementById('mostrarfactura');
+    boton.addEventListener("click", function () {
+        let Factura1 = new Factura(clienteNIF.value, fecha.value, hora.value, pagada.value);
+        Factura1.agregarLinea("Pan", 4, 1.00);
+        Factura1.agregarLinea("Pan", 4, 1.00);
+        mostrar.innerHTML = `<p>${Factura1.imprimirFactura()}</p>`;
+    })
+});
