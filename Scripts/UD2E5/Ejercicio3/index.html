@@ -19,9 +19,37 @@
         <label for="hora">Hora: </label>
         <input type="text" id="hora" required placeholder="HH:MM"><br>
         <label for="pagada">Pagada: </label>
-        <input type="checkbox" id="pagada" required placeholder="true"><br>
-        <button type="button"id="agregar">Agregar Factura</button>
+        <input type="checkbox" id="pagada"><br>
+        <button type="button"id="agregarfactura">Agregar Factura</button>
     </form>
+    <h2>Gestionar Líneas de Factura</h2>
+    <form id="formGestionarLinea">
+        <label for="concepto">Concepto: </label>
+        <input type="text" id="concepto" required placeholder="12345678A"><br>
+        <label for="cantida">Cantidad: </label>
+        <input type="number" id="cantidad" required placeholder="1"><br>
+        <label for="precio">Precio: </label>
+        <input type="number" id="precio" required placeholder="1.00"><br>
+        <button type="button"id="agregarlinea">Agregar Linea</button>
+        <button type="button"id="eliminarlinea">Eliminar Linea</button>
+    </form>
+    <h2>Serialización y Deserialización de Factura</h2>
+    <form id="formSerializacionyDeserializacion">
+        <h3>Entrada</h3>
+        <label for="entrada">Cadena JSON: </label><br>
+        <textarea id="entrada" rows="5" cols="50" placeholder='{"clienteNIF": "12345678A", "fecha": "2024-11-15", "hora": "14:30", "pagada": false, "lineas": []}'></textarea><br><br>
+
+        <button type="button" id="deserializar">Deserializar JSON</button>
+
+        <h3>Salida</h3>
+        <label for="salida">Factura Serializada (JSON): </label><br>
+        <textarea id="salida" rows="5" cols="50" readonly></textarea><br><br>
+
+        <button type="button" id="serializar">Serializar Factura</button>
+    </form>
+
+    <h2>Factura Generada</h2>
+    <button type="button" id="imprimir">Imprimir Factura</button>
     <div id="mostrarfactura"></div>
 </body>
 </html>

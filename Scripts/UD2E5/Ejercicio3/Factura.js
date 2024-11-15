@@ -4,7 +4,7 @@ class Factura {
     constructor(clienteNIF, fecha, hora, pagada) {
         this.clienteNIF = clienteNIF;
         this.fecha = new Date(fecha + " " + hora);
-        this.pagada = pagada = 'on' ? 'Pagada' : 'Sin Pagar';
+        this.pagada = (pagada === true) ? 'Pagada' : 'Sin Pagar';
         this.lineas = [];
     }
     get importeTotal() {
@@ -40,17 +40,56 @@ class Factura {
         return impreso;
     }
 }
+let Factura1 = Factura;
 window.addEventListener("load", function () {
     let clienteNIF = document.getElementById('clienteNIF');
     let fecha = document.getElementById('fecha');
     let hora = document.getElementById('hora');
     let pagada = document.getElementById('pagada');
-    let boton = document.getElementById('agregar');
+    let boton = document.getElementById('agregarfactura');
     let mostrar = document.getElementById('mostrarfactura');
+    let concepto = document.getElementById('concepto');
+    let cantidad = document.getElementById('cantidad');
+    let precio = document.getElementById('precio');
+    let boton1 = document.getElementById('agregarlinea');
+    let boton2 = document.getElementById('eliminarlinea');
+    let boton3 = document.getElementById('imprimir');
+    let entrada = document.getElementById('entrada');
+    let salida = document.getElementById('salida');
+    let botonSerializar = document.getElementById('serializar');
+    let botonDeserializar = document.getElementById('deserializar');
     boton.addEventListener("click", function () {
-        let Factura1 = new Factura(clienteNIF.value, fecha.value, hora.value, pagada.value);
-        Factura1.agregarLinea("Pan", 4, 1.00);
-        Factura1.agregarLinea("Pan", 4, 1.00);
+        if (pagada.checked) {
+            Factura1 = new Factura(clienteNIF.value, fecha.value, hora.value, true);
+        } else {
+            Factura1 = new Factura(clienteNIF.value, fecha.value, hora.value, false);
+            mostrar.innerHTML = `<p>${Factura1.imprimirFactura()}</p>`;
+        }
+    })
+    boton1.addEventListener("click", function () {
+        Factura1.agregarLinea(concepto.value, cantidad.value, precio.value);
+    })
+    boton2.addEventListener("click", function () {
+        Factura1.eliminarLinea();
+    })
+    boton3.addEventListener("click", function () {
         mostrar.innerHTML = `<p>${Factura1.imprimirFactura()}</p>`;
+    })
+    botonSerializar.addEventListener("click", function () {
+        try {
+            let facturaJSON = Utilidades.serializarFactura(factura1);
+            salida.value = facturaJSON;
+        } catch (error) {
+            alert("Error al serializar la factura.");
+        }
+    })
+    botonDeserializar.addEventListener("click", function () {
+        try {
+            let facturaJSON = entrada.value;
+            let facturaObjeto = Utilidades.deserializarFactura(facturaJSON);
+            salida.value = JSON.stringify(facturaObjeto, null, 2);
+        } catch (error) {
+            alert("Error al deserializar el JSON. Asegúrate de que el formato es válido.");
+        }
     })
 });

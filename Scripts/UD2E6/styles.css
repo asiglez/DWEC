@@ -1,0 +1,178 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+    color: #333;
+}
+
+h1, h2, h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+ul {
+    list-style: none;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+#buscador {
+    margin-bottom: 20px;
+}
+
+/* Menú de navegación */
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+}
+
+header nav ul {
+    display: flex;
+    justify-content: center;
+}
+
+header nav ul li {
+    margin: 0 15px;
+}
+
+header nav ul li button {
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 15px;
+    transition: background-color 0.3s;
+}
+
+header nav ul li button:hover {
+    background-color: #555;
+}
+
+/* Contenedor principal */
+#app {
+    margin-top: 30px;
+}
+
+ul.listado {
+    padding: 0;
+    margin: 0;
+}
+
+ul.listado li {
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul.listado li .acciones {
+    display: flex;
+    gap: 10px;
+}
+
+ul.listado li .acciones button {
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+ul.listado li .acciones .editar {
+    background-color: #4CAF50;
+    color: white;
+}
+
+ul.listado li .acciones .editar:hover {
+    background-color: #45a049;
+}
+
+ul.listado li .acciones .eliminar {
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+}
+
+ul.listado li .acciones .eliminar:hover {
+    background-color: #e53935;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+form input[type="text"],
+form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+form button {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+form h3 {
+    margin-bottom: 15px;
+}
+
+.mensaje {
+    margin-top: 20px;
+    padding: 10px;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.mensaje.error {
+    background-color: #f44336;
+}
+
+.mensaje.success {
+    background-color: #4CAF50;
+}
