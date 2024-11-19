@@ -4,12 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejercicio3</title>
-    <script type="module" src="Factura.js"></script>
+    <title>Gestión Mecanica</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-
+    <div id="app"></div>
+    <script type="module">
+        import GestionMecanica from './GestionMecanica.js';
+        const gestionMecanica = new GestionMecanica();
+        gestionMecanica.iniciarApp('#app');
+    </script>
 </body>
-
 </html>
