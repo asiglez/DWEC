@@ -111,21 +111,134 @@ class GestionMecanica {
                     </fieldset>
                     <button type="submit">${vehiculo ? "Guardar Cambios" : "Crear Vehículo"}</button>
                 </form>
-                ${vehiculo ? `<button id="ver-reparaciones" data-id="${vehiculo.vehiculoId}">Ver Reparaciones</button>` : ""}
+                ${vehiculo ? `<button id="ver-reparaciones2" data-id="${vehiculo.vehiculoId}">Ver Reparaciones</button>` : ""}
             </section>
         `;
     }
 
+    #generarHTMLReparacionesVehiculo(vehiculoId) {
+        const vehiculo = this.#clienteBD.obtenerVehiculo("vehiculoId", vehiculoId)[0];
+        const reparaciones = this.#clienteBD.obtenerReparaciones("vehiculoId", vehiculoId)
+            .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        return `
+            <section>
+                <header>
+                    <h2>Reparaciones de ${vehiculo.matricula}</h2>
+                    <p>Teléfono del propietario: ${vehiculo.propietario.telefono}</p>
+                    <button class="ver-vehiculo" data-id="${vehiculoId}">Ver Vehículo</button>
+                </header>
+                ${this.#generarHTMLReparaciones(reparaciones)}
+            </section>
+        `;
+    }
+    #generarHTMLReparaciones(reparaciones) {
+        if (!reparaciones.length) {
+            return `<p>No hay reparaciones registradas para este vehículo.</p>`;
+        }
+
+        return `
+            <ul>
+                ${reparaciones
+                .map(
+                    reparacion => `
+                        <li>
+                            <strong>${reparacion.fecha}:</strong> ${reparacion.descripcion}
+                            <button class="ver-reparacion" data-id="${reparacion.reparacionId}">Ver</button>
+                            <button class="borrar-reparacion" data-id="${reparacion.reparacionId}">Borrar</button>
+                        </li>
+                    `
+                )
+                .join("")}
+            </ul>
+        `;
+    }
+    #generarHTMLReparacion(reparacionId = 0, vehiculoId = 0) {
+        const reparacion = reparacionId
+            ? this.#clienteBD.obtenerReparacion("reparacionId", reparacionId)[0]
+            : { vehiculoId, trabajos: [] };
+
+        return `
+            <section>
+                <h2>${reparacionId ? "Editar Reparación" : "Nueva Reparación"}</h2>
+                <form id="form-reparacion">
+                    <input type="hidden" name="reparacionId" value="${reparacionId || ""}">
+                    <input type="hidden" name="vehiculoId" value="${vehiculoId || reparacion.vehiculoId}">
+                    <label>Descripción:</label>
+                    <textarea name="descripcion" required>${reparacion.descripcion || ""}</textarea>
+                    <label>Fecha:</label>
+                    <input type="date" name="fecha" value="${reparacion.fecha || ""}" required>
+                    <label>Kilómetros:</label>
+                    <input type="number" name="kilometros" value="${reparacion.kilometros || ""}" required>
+                    <fieldset>
+                        <legend>Estado:</legend>
+                        <label><input type="checkbox" name="presupuesto" ${reparacion.presupuesto ? "checked" : ""}> Presupuesto</label>
+                        <label><input type="checkbox" name="aprobada" ${reparacion.aprobada ? "checked" : ""}> Aprobada</label>
+                        <label><input type="checkbox" name="pagado" ${reparacion.pagado ? "checked" : ""}> Pagado</label>
+                        <label><input type="checkbox" name="terminado" ${reparacion.terminado ? "checked" : ""}> Terminado</label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Trabajos</legend>
+                        <div id="form-trabajo">
+                            <label>Concepto:</label>
+                            <input type="text" id="concepto">
+                            <label>Precio Unitario:</label>
+                            <input type="number" id="precioUnitario">
+                            <label>Cantidad:</label>
+                            <input type="number" id="cantidad">
+                            <button type="button" id="agregar-trabajo">Añadir Trabajo</button>
+                        </div>
+                        <ul id="listado-trabajos">
+                            ${reparacion.trabajos
+                .map(
+                    (trabajo, index) => `
+                                    <li>
+                                        ${trabajo.concepto} - ${trabajo.cantidad} x ${trabajo.precioUnitario} = ${trabajo.totalTrabajo}
+                                        <button type="button" class="borrar-trabajo" data-index="${index}">Borrar</button>
+                                    </li>
+                                `
+                )
+                .join("")}
+                        </ul>
+                    </fieldset>
+                    <button type="submit">${reparacionId ? "Guardar Reparación" : "Crear Reparación"}</button>
+                </form>
+            </section>
+        `;
+    }
     #asignarEventos() {
         document.querySelector("#inicio").addEventListener("click", () => {
             document.querySelector("#resultado").innerHTML = this.#generarHTMLInicio();
             this.#asignarEventosInicio();
         });
-
+    
         document.querySelector("#listado-vehiculos").addEventListener("click", () => {
             const vehiculos = this.#clienteBD.obtenerVehiculos();
             document.querySelector("#resultado").innerHTML = this.#generarHTMLVehiculos(vehiculos);
             this.#asignarEventosVehiculos();
+        });
+    
+        document.querySelector("#listado-presupuestos").addEventListener("click", () => {
+            alert("Funcionalidad aún no implementada");
+        });
+    
+        document.querySelector("#listado-no-terminadas").addEventListener("click", () => {
+            const reparacionesNoTerminadas = this.#clienteBD.obtenerReparaciones("terminado", false);
+            if (reparacionesNoTerminadas.length) {
+                document.querySelector("#resultado").innerHTML = this.#generarHTMLReparaciones(reparacionesNoTerminadas);
+                this.#asignarEventosReparaciones(vehiculoId);
+            } else {
+                document.querySelector("#resultado").innerHTML = "<p>No hay reparaciones no terminadas.</p>";
+            }
+        });
+        document.querySelector("#listado-no-pagadas").addEventListener("click", () => {
+            const reparacionesNoPagadas = this.#clienteBD.obtenerReparaciones("pagado", false);
+            if (reparacionesNoPagadas.length) {
+                document.querySelector("#resultado").innerHTML = this.#generarHTMLReparaciones(reparacionesNoPagadas);
+                this.#asignarEventosReparaciones(vehiculoId);
+            } else {
+                document.querySelector("#resultado").innerHTML = "<p>No hay reparaciones sin pagar.</p>";
+            }
         });
     }
 
@@ -148,22 +261,52 @@ class GestionMecanica {
                 this.#asignarEventosFormularioVehiculo();
             })
         );
-
+    
+        document.querySelectorAll(".ver-reparaciones").forEach(btn =>
+            btn.addEventListener("click", e => {
+                const vehiculoId = e.target.dataset.id;
+                document.querySelector("#resultado").innerHTML = this.#generarHTMLReparacionesVehiculo(vehiculoId);
+                this.#asignarEventosReparaciones(vehiculoId);
+            })
+        );
+        document.querySelectorAll(".ver-reparaciones2").forEach(btn =>
+            btn.addEventListener("click", e => {
+                const vehiculoId = e.target.dataset.id;
+                document.querySelector("#resultado").innerHTML = this.#generarHTMLReparacionesVehiculo(vehiculoId);
+                this.#asignarEventosReparaciones(vehiculoId);
+            })
+        );
+    
         document.querySelector("#crear-vehiculo").addEventListener("click", () => {
             document.querySelector("#resultado").innerHTML = this.#generarHTMLVehiculo();
             this.#asignarEventosFormularioVehiculo();
         });
-
+    
         document.querySelectorAll(".borrar-vehiculo").forEach(btn =>
             btn.addEventListener("click", e => {
                 const vehiculoId = e.target.dataset.id;
                 this.#clienteBD.borrarVehiculo(vehiculoId);
+                alert("Vehículo eliminado.");
+                this.iniciarApp("#app");
             })
         );
-        document.querySelectorAll(".ver-reparaciones").forEach(btn =>
+    }
+    #asignarEventosReparaciones(vehiculoId) {
+        document.querySelectorAll(".ver-reparacion").forEach(btn =>
             btn.addEventListener("click", e => {
-                const vehiculoId = e.target.dataset.id;
-                this.#clienteBD.obtenerReparaciones("vehiculoId",vehiculoId);
+                const reparacionId = e.target.dataset.id;
+                document.querySelector("#resultado").innerHTML = this.#generarHTMLReparacion(reparacionId, vehiculoId);
+                this.#asignarEventosFormularioReparacion();
+            })
+        );
+    
+        document.querySelectorAll(".borrar-reparacion").forEach(btn =>
+            btn.addEventListener("click", e => {
+                const reparacionId = e.target.dataset.id;
+                this.#clienteBD.borrarReparacion(reparacionId);
+                alert("Reparación eliminada.");
+                document.querySelector("#resultado").innerHTML = this.#generarHTMLReparacionesVehiculo(vehiculoId);
+                this.#asignarEventosReparaciones(vehiculoId);
             })
         );
     }
@@ -181,6 +324,54 @@ class GestionMecanica {
             alert("Vehículo guardado con éxito.");
         });
     }
+    #asignarEventosFormularioReparacion() {
+        const form = document.querySelector("#form-reparacion");
+        const trabajos = document.querySelector("#listado-trabajos");
+    
+        document.querySelector("#agregar-trabajo").addEventListener("click", () => {
+            const concepto = document.querySelector("#concepto").value;
+            const precioUnitario = parseFloat(document.querySelector("#precioUnitario").value);
+            const cantidad = parseInt(document.querySelector("#cantidad").value, 10);
+    
+            if (concepto && precioUnitario && cantidad) {
+                const totalTrabajo = precioUnitario * cantidad;
+                trabajos.innerHTML += `
+                    <li>
+                        ${concepto} - ${cantidad} x ${precioUnitario} = ${totalTrabajo}
+                        <button type="button" class="borrar-trabajo">Borrar</button>
+                    </li>
+                `;
+            }
+        });
+    
+        trabajos.addEventListener("click", e => {
+            if (e.target.classList.contains("borrar-trabajo")) {
+                e.target.closest("li").remove();
+            }
+        });
+    
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const reparacion = Object.fromEntries(formData);
+            reparacion.trabajos = Array.from(trabajos.children).map(item => {
+                const text = item.textContent.split(" - ");
+                const concepto = text[0];
+                const cantidad = parseInt(text[1].split(" x ")[0], 10);
+                const precioUnitario = parseFloat(text[1].split(" x ")[1].split(" = ")[0]);
+                const totalTrabajo = parseFloat(text[1].split(" = ")[1]);
+                return { concepto, precioUnitario, cantidad, totalTrabajo };
+            });
+    
+            if (reparacion.reparacionId) {
+                this.#clienteBD.guardarReparacion(reparacion);
+            } else {
+                this.#clienteBD.crearReparacion(reparacion);
+            }
+    
+            alert("Reparación guardada con éxito.");
+            this.iniciarApp("#app");
+        });
+    }
 }
-
 export default GestionMecanica;
