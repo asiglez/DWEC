@@ -1,103 +1,75 @@
-let coleccionLibros = datos.libros.map(libro => new Libro(libro.libroId, libro.titulo, libro.ISBN, libro.autorId, libro.bibliotecaId, libro.prestamos));
-    let coleccionAutores = datos.autores.map(autor => new Autor(autor.autorId, autor.nombre, autor.nacionalidad, autor.biografia, autor.libros));
-    let coleccionBibliotecas = datos.bibliotecas.map(biblioteca => new Biblioteca(biblioteca.bibliotecaId, biblioteca.nombre, biblioteca.ubicacion));
+(function() {
+    function obtenerEstructuraJSON() {
+      function procesarNodo(nodo) {
+        const etiqueta = nodo.tagName.toLowerCase();
+        const texto = Array.from(nodo.childNodes)
+          .filter(child => child.nodeType === Node.TEXT_NODE)
+          .map(child => child.textContent.trim())
+          .join(" ")
+          .trim();
+        const tieneId = nodo.hasAttribute("id");
+        const lstClass = Array.from(nodo.classList);
+        const lstData = {};
 
-    const generarHTMLListadoAutores = () => {
-        return coleccionAutores.map(autor => autor.generarHTMLPropiedades()).join('');
-    };
+        Array.from(nodo.attributes).forEach(attr => {
+          if (attr.name.startsWith("data-")) {
+            lstData[attr.name] = attr.value;
+          }
+        });
 
-    const generarHTMLListadoBibliotecas = () => {
-        return coleccionBibliotecas.map(biblioteca => biblioteca.generarHTMLPropiedades()).join('');
-    };
+        const lstHijos = Array.from(nodo.children).map(hijo => procesarNodo(hijo));
 
-    const generarHTMLListadoLibros = () => {
-        return coleccionLibros.map(libro => libro.generarHTMLPropiedades()).join('');
-    };
+        return {
+          etiqueta: etiqueta,
+          texto: texto,
+          tieneId: tieneId,
+          lstClass: lstClass.length ? lstClass : [],
+          lstData: Object.keys(lstData).length ? lstData : {},
+          lstHijos: lstHijos
+        };
+      }
+      return procesarNodo(document.body);
+    }
 
-    const buscarLibrosPorTitulo = (titulo) => {
-        return coleccionLibros.filter(libro => libro.titulo.toLowerCase().includes(titulo.toLowerCase()));
-    };
-
-    const buscarLibrosPorAutor = (autorId) => {
-        return coleccionLibros.filter(libro => libro.autorId === autorId);
-    };
-
-    const buscarLibro = (libroId) => {
-        return coleccionLibros.find(libro => libro.libroId === libroId);
-    };
-
-    const buscarAutor = (autorId) => {
-        return coleccionAutores.find(autor => autor.autorId === autorId);
-    };
-
-    const buscarBiblioteca = (bibliotecaId) => {
-        return coleccionBibliotecas.find(biblioteca => biblioteca.bibliotecaId === bibliotecaId);
-    };
-
-    const crearLibro = (libroData) => {
-        const nuevoLibro = new Libro(libroData.libroId, libroData.titulo, libroData.ISBN, libroData.autorId, libroData.bibliotecaId, libroData.prestamos);
-        coleccionLibros.push(nuevoLibro);
-    };
-
-    const crearAutor = (autorData) => {
-        const nuevoAutor = new Autor(autorData.autorId, autorData.nombre, autorData.nacionalidad, autorData.biografia, autorData.libros);
-        coleccionAutores.push(nuevoAutor);
-    };
-
-    const crearBiblioteca = (bibliotecaData) => {
-        const nuevaBiblioteca = new Biblioteca(bibliotecaData.bibliotecaId, bibliotecaData.nombre, bibliotecaData.ubicacion);
-        coleccionBibliotecas.push(nuevaBiblioteca);
-    };
-
-    const borrarLibro = (libroId) => {
-        coleccionLibros = coleccionLibros.filter(libro => libro.libroId !== libroId);
-    };
-
-    const borrarAutor = (autorId) => {
-        coleccionAutores = coleccionAutores.filter(autor => autor.autorId !== autorId);
-    };
-
-    const borrarBiblioteca = (bibliotecaId) => {
-        coleccionBibliotecas = coleccionBibliotecas.filter(biblioteca => biblioteca.bibliotecaId !== bibliotecaId);
-    };
-
-    const crearPrestamo = (libroId) => {
-        const libro = buscarLibro(libroId);
-        if (libro && libro.estaDisponible()) {
-            libro.crearPrestamo();
-        } else {
-            console.log(`El libro no está disponible para préstamo.`);
+    function imprimirEstructura(selector) {
+        const nodo = document.querySelector(selector);
+        if (!nodo) {
+          console.error(`No se encontró ningún nodo con el selector: ${selector}`);
+          return '';
         }
-    };
-
-    const devolverPrestamo = (libroId) => {
-        const libro = buscarLibro(libroId);
-        if (libro && !libro.estaDisponible()) {
-            libro.devolverPrestamo();
-        } else {
-            console.log(`El libro no está actualmente prestado.`);
+    
+        let cadena = '';
+        let nodoActual = nodo;
+    
+        while (nodoActual) {
+          const etiqueta = nodoActual.tagName.toLowerCase();
+          const id = nodoActual.id || 'noid'; // Mostrar 'noid' si no tiene id
+          const clases = nodoActual.classList.length > 0 ? Array.from(nodoActual.classList).join(',') : 'noclass'; // Mostrar 'noclass' si no tiene clases
+          const texto = nodoActual.textContent.trim().replace(/\s+/g, ' ').slice(0, 20); // Limitar a 20 caracteres para la vista previa
+    
+          // Construir la cadena para mostrar en la página
+          cadena = `${etiqueta}-${id}-${clases}-${texto}\n` + cadena;
+          
+          nodoActual = nodoActual.parentElement; // Subir un nivel en el árbol DOM
         }
-    };
+    
+        return cadena; // Devolver la cadena generada
+      }
 
-    const gestionDeDatos = () => {
-        return { coleccionLibros, coleccionAutores, coleccionBibliotecas };
+    window.analizadorDOM = {
+      obtenerEstructuraJSON,
+      imprimirEstructura
     };
-
-    return {
-        generarHTMLListadoAutores,
-        generarHTMLListadoBibliotecas,
-        generarHTMLListadoLibros,
-        buscarLibrosPorTitulo,
-        buscarLibrosPorAutor,
-        buscarLibro,
-        buscarAutor,
-        buscarBiblioteca,
-        crearLibro,
-        crearAutor,
-        crearBiblioteca,
-        borrarLibro,
-        borrarAutor,
-        borrarBiblioteca,
-        crearPrestamo,
-        devolverPrestamo,
-    };
+  window.addEventListener("DOMContentLoaded", function() {
+    const estructuraJSON = obtenerEstructuraJSON();
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      `<h2>Estructura JSON del DOM</h2><pre>${JSON.stringify(estructuraJSON, null, 2)}</pre>`
+    );
+    const estructuraTexto = imprimirEstructura('footer');
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      `<h2>Estructura desde el nodo "footer"</h2><pre>${estructuraTexto}</pre>`
+    );
+  });
+  })();
