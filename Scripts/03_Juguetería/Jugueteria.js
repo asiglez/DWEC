@@ -202,7 +202,7 @@ class Jugueteria {
      * @returns {void}
      */
     asignarEventoNavegador() {
-        /**Al ser enlaces y no botones, evitosu accion de redirigir */
+        /**Al ser enlaces y no botones, evito su accion de redirigir */
         event.preventDefault();
 
         /**Recojo la accion */

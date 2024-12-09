@@ -1,39 +1,75 @@
-(function () {
+(function() {
   function obtenerEstructuraJSON() {
-    const body = document.body;
-    const texto = function () {
-      let texto = '';
-      for (let nodo of body.childNodes) {
-        if (nodo.nodeType === Node.TEXT_NODE) {
-          texto += nodo.textContent.replace(/\s+/g, ' ').trim();
+    function procesarNodo(nodo) {
+      const etiqueta = nodo.tagName.toLowerCase();
+      const texto = Array.from(nodo.childNodes)
+        .filter(child => child.nodeType === Node.TEXT_NODE)
+        .map(child => child.textContent.trim())
+        .join(" ")
+        .trim();
+      const tieneId = nodo.hasAttribute("id");
+      const lstClass = Array.from(nodo.classList);
+      const lstData = {};
+
+      Array.from(nodo.attributes).forEach(attr => {
+        if (attr.name.startsWith("data-")) {
+          lstData[attr.name] = attr.value;
         }
-      }
-      return texto;
+      });
+
+      const lstHijos = Array.from(nodo.children).map(hijo => procesarNodo(hijo));
+
+      return {
+        etiqueta: etiqueta,
+        texto: texto,
+        tieneId: tieneId,
+        lstClass: lstClass.length ? lstClass : [],
+        lstData: Object.keys(lstData).length ? lstData : {},
+        lstHijos: lstHijos
+      };
     }
-    const lstData = function(){
-      const array=Array.from(body.attributes);
-      const as ={};
-      for(let a=0;a<array.length;a++){
-        if(array[a].name.startsWith("data-*")){
-          
-        }
+    return procesarNodo(document.body);
+  }
+
+  function imprimirEstructura(selector) {
+      const nodo = document.querySelector(selector);
+      if (!nodo) {
+        console.error(`No se encontró ningún nodo con el selector: ${selector}`);
+        return '';
       }
-      return as;
-  }
-  const json = {
-    etiqueta: body.tagName.toLowerCase(),
-    texto: texto(),
-    tieneId: body.id === "" ? false : true,
-    lstClass: Array.from(body.classList),
-    lstData: lstData,
-    lstHijos: Array.from(body.children)
-  }
-  return json;
-}
+  
+      let cadena = '';
+      let nodoActual = nodo;
+  
+      while (nodoActual) {
+        const etiqueta = nodoActual.tagName.toLowerCase();
+        const id = nodoActual.id || 'noid'; // Mostrar 'noid' si no tiene id
+        const clases = nodoActual.classList.length > 0 ? Array.from(nodoActual.classList).join(',') : 'noclass'; // Mostrar 'noclass' si no tiene clases
+        const texto = nodoActual.textContent.trim().replace(/\s+/g, ' ').slice(0, 20); // Limitar a 20 caracteres para la vista previa
+  
+        // Construir la cadena para mostrar en la página
+        cadena = `${etiqueta}-${id}-${clases}-${texto}\n` + cadena;
+        
+        nodoActual = nodoActual.parentElement; // Subir un nivel en el árbol DOM
+      }
+  
+      return cadena; // Devolver la cadena generada
+    }
+
   window.analizadorDOM = {
-  obtenerEstructuraJSON,
-};
-}) ();
-document.addEventListener("DOMContentLoaded", function () {
-  console.log(analizadorDOM.obtenerEstructuraJSON());
+    obtenerEstructuraJSON,
+    imprimirEstructura
+  };
+window.addEventListener("DOMContentLoaded", function() {
+  const estructuraJSON = obtenerEstructuraJSON();
+  document.body.insertAdjacentHTML(
+    'beforeend',
+    `<h2>Estructura JSON del DOM</h2><pre>${JSON.stringify(estructuraJSON, null, 2)}</pre>`
+  );
+  const estructuraTexto = imprimirEstructura('footer');
+  document.body.insertAdjacentHTML(
+    'beforeend',
+    `<h2>Estructura desde el nodo "footer"</h2><pre>${estructuraTexto}</pre>`
+  );
 });
+})();
