@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  
+  .container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .column {
+    flex: 1;
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 300px;
+    overflow-y: auto;
+  }
+  
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table th,
+  table td {
+    border: 1px solid #ccc;
+    padding: 5px;
+    text-align: left;
+  }
+  
+  .footer {
+    margin-top: 20px;
+  }
+  
+  .seleccionado {
+    background-color: #f0f0f0;
+  }
