@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import Tablero from "./components/Ejercicio1/Tablero.jsx";
+import AppEnrutador from './routers/Ejercicio4/AppEnrutador.jsx';
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Tablero />
+    <AppEnrutador />
   </StrictMode>,
 )
